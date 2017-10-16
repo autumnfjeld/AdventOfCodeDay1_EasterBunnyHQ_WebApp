@@ -5,7 +5,8 @@
     "main": "gobunny.js",
     "scripts": {
         "test": "node test.js run",
-        "goBunny": "node gobunny.js run"
+        "goBunny": "node gobunny.js run",
+        "watch:pug": "pug src/index.pug --out . --watch --pretty"
     },
     "repository": {
         "type": "git",
