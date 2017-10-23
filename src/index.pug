@@ -3,11 +3,19 @@ html
     head
         meta(charset="utf-8")
         title Easter Bunny HQ
-    body(style="background-color: hsl(271, 46%, 32%); color: hsl(0,0%,70%);")
+    body(style="background-color: hsl(271, 27%, 29%); color: hsl(0,0%,70%);")
         .container
             h1  A trip to Easter Bunny HQ
             h2 Input
             p.input
+            h2 Path coordinates
+            p.path
             h2 Solution
-            p.solution
+            p Dr. Bunny could get to Easter Bunny HQ in
+                span.solution
+                span blocks.
+            canvas#canvas(width="100" height="100")
+                p This text is displayed if your browser does not support HTML5 Canvas.
+    script(src="gobunny.js")
+    script(src="ViewController.js")
     script(src="web-app.js")

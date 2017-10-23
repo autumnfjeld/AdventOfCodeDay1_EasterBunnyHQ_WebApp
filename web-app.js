@@ -3,42 +3,20 @@
 (function (window) {
 
     /**
-     *
-     * @param {Array} sequence
-     * @param {number} minBlocks
-     * @constructor
-     */
-    function ViewController(sequence, minBlocks) {
-        this.sequence = sequence;
-        this.minBlocks = minBlocks;
-    }
-
-    /**
-     * Initiate render of dynamic DOM info
-     */
-    ViewController.prototype.render = function(){
-        console.log('render test data');
-        var $input = document.querySelector('.input');
-        console.log('$input', $input);
-        $input.innerHTML= '[R1, R2, L3]';
-
-    };
-
-    // Export to window
-    window.app = window.app || {};
-    window.app.ViewController = ViewController;
-
-})(window);
-
-
-(function () {
-
-    /**
-     * Web App tha facilitates computation ond view rendering
+     * Web App ties together the Easter Bunny HQ computations and view rendering
      * @constructor
      */
     function WebApp() {
-        this.viewController = new app.ViewController();
+        // var sequence = ['R5', 'L5', 'R5', 'R3'];
+        // var sequence = ['L2', 'L3', 'L3', 'L4', 'R1', 'R2', 'L3', 'R3', 'R3', 'L1', 'L3', 'R2', 'R3', 'L3', 'R4', 'R3', 'R3', 'L1', 'L4', 'R4', 'L2', 'R5', 'R1', 'L5', 'R1', 'R3', 'L5', 'R2', 'L2', 'R2', 'R1', 'L1', 'L3', 'L3', 'R4', 'R5', 'R4', 'L1', 'L189', 'L2', 'R2', 'L5', 'R5', 'R45', 'L3', 'R4', 'R77', 'L1', 'R1', 'R194', 'R2', 'L5', 'L3', 'L2', 'L1', 'R5', 'L3', 'L3', 'L5', 'L5', 'L5', 'R2', 'L1', 'L2', 'L3', 'R2', 'R5', 'R4', 'L2', 'R3', 'R5', 'L2', 'L2', 'R3', 'L3', 'L2', 'L1', 'L3', 'R5', 'R4', 'R3', 'R2', 'L1', 'R2', 'L5', 'R4', 'L5', 'L4', 'R4', 'L2', 'R5', 'L3', 'L2', 'R4', 'L1', 'L2', 'R2', 'R3', 'L2', 'L5', 'R1', 'R1', 'R3', 'R4', 'R1', 'R2', 'R4', 'R5', 'L3', 'L5', 'L3', 'L3', 'R5', 'R4', 'R1', 'L3', 'R1', 'L3', 'R3', 'R3', 'R3', 'L1', 'R3', 'R4', 'L5', 'L3', 'L1', 'L5', 'L4', 'R4', 'R1', 'L4', 'R3', 'R3', 'R5', 'R4', 'R3', 'R3', 'L1', 'L2', 'R1', 'L4', 'L4', 'L3', 'L4', 'L3', 'L5', 'R2', 'R4', 'L2'];
+        var sequence = ['L2', 'L1', 'L4', 'R1', 'R6', 'R5', 'R6'];
+
+        this.findEasterBunnyHQ = new app.FindEasterBunnyHQ(sequence);
+        this.findEasterBunnyHQ.go();
+        var minBlocks = this.findEasterBunnyHQ.minimumBlocksAway;
+        // var position = this.findEasterBunnyHQ.position;
+        // console.log('position.pathCoordinates',position.pathCoordinates);
+        this.viewController = new app.ViewController(sequence, minBlocks);
     }
 
     var easterBunnyHQ = new WebApp();
@@ -47,13 +25,10 @@
      * Kick off web app
      */
     function run() {
-        console.log('run');
         easterBunnyHQ.viewController.render();
     }
 
     run();
-    //TODO  No internet on plane
-    // window.onload(run)
 
 })(window);
 
