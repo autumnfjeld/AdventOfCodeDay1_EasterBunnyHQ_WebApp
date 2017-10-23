@@ -56,6 +56,13 @@ Direction.prototype.turn = function (turnDirection) {
 function Position() {
     this.x = 0;
     this.y = 0;
+    this.pathCoordinates = [{x:0, y:0}];
+    this.pathBoundaries = {
+        minX: 0,
+        maxX: 0,
+        minY: 0,
+        maxY: 0
+    };
 }
 
 /**
@@ -72,6 +79,23 @@ Position.prototype.updatePosition = function (distance, directionVector) {
         this.y += distance * directionVector[1];
     } else {
         this.x += distance * directionVector[0];
+    }
+    this.pathCoordinates.push({x: this.x, y: this.y});
+    this.trackBoundary();
+};
+
+Position.prototype.trackBoundary = function (){
+    if (this.x < this.pathBoundaries.minX) {
+        this.pathBoundaries.minX = this.x;
+    }
+    if (this.x > this.pathBoundaries.maxX) {
+        this.pathBoundaries.maxX = this.x;
+    }
+    if (this.x < this.pathBoundaries.minY) {
+        this.pathBoundaries.minY = this.x;
+    }
+    if (this.x > this.pathBoundaries.maxY) {
+        this.pathBoundaries.maxY= this.x;
     }
 };
 
@@ -113,9 +137,6 @@ FindEasterBunnyHQ.prototype.parseSequence = function (sequence) {
 FindEasterBunnyHQ.prototype.go = function(){
     this.hopAlongTheBlocks();
     this.computeMinBunnyBlocks();
-    console.log('  *********************************************************************************');
-    console.log( '  Dr. Bunny could get from her start point to Easter Bunny HQ in a mere', this.minimumBlocksAway, 'blocks.');
-    console.log('  *********************************************************************************');
 };
 
 /**
@@ -137,30 +158,8 @@ FindEasterBunnyHQ.prototype.computeMinBunnyBlocks = function () {
     this.minimumBlocksAway = Math.abs(this.position.x) + Math.abs(this.position.y);
 };
 
-
-/****************************************************************************
- *  Run Easter Bunny HQ App with input data
- ****************************************************************************/
-
-/**
- * Export function to call via npm script tor run app with specified input data
- * @returns {number}
- */
-function run() {
-    // My puzzle input from my http://adventofcode.com/2016/day/1/input
-    var input = {
-        sequence: ['L2', 'L3', 'L3', 'L4', 'R1', 'R2', 'L3', 'R3', 'R3', 'L1', 'L3', 'R2', 'R3', 'L3', 'R4', 'R3', 'R3', 'L1', 'L4', 'R4', 'L2', 'R5', 'R1', 'L5', 'R1', 'R3', 'L5', 'R2', 'L2', 'R2', 'R1', 'L1', 'L3', 'L3', 'R4', 'R5', 'R4', 'L1', 'L189', 'L2', 'R2', 'L5', 'R5', 'R45', 'L3', 'R4', 'R77', 'L1', 'R1', 'R194', 'R2', 'L5', 'L3', 'L2', 'L1', 'R5', 'L3', 'L3', 'L5', 'L5', 'L5', 'R2', 'L1', 'L2', 'L3', 'R2', 'R5', 'R4', 'L2', 'R3', 'R5', 'L2', 'L2', 'R3', 'L3', 'L2', 'L1', 'L3', 'R5', 'R4', 'R3', 'R2', 'L1', 'R2', 'L5', 'R4', 'L5', 'L4', 'R4', 'L2', 'R5', 'L3', 'L2', 'R4', 'L1', 'L2', 'R2', 'R3', 'L2', 'L5', 'R1', 'R1', 'R3', 'R4', 'R1', 'R2', 'R4', 'R5', 'L3', 'L5', 'L3', 'L3', 'R5', 'R4', 'R1', 'L3', 'R1', 'L3', 'R3', 'R3', 'R3', 'L1', 'R3', 'R4', 'L5', 'L3', 'L1', 'L5', 'L4', 'R4', 'R1', 'L4', 'R3', 'R3', 'R5', 'R4', 'R3', 'R3', 'L1', 'L2', 'R1', 'L4', 'L4', 'L3', 'L4', 'L3', 'L5', 'R2', 'R4', 'L2']
-    };
-
-    var bunnyTrip = new FindEasterBunnyHQ(input.sequence);
-    bunnyTrip.go();
-    return bunnyTrip.minimumBlocksAway;
-}
+window.app = window.app || {};
+window.app.FindEasterBunnyHQ = FindEasterBunnyHQ;
 
 
-module.exports = {
-    FindEasterBunnyHQ: FindEasterBunnyHQ,
-    run: run
-};
-
-require('make-runnable');
+// TODO setup different testing procedure
