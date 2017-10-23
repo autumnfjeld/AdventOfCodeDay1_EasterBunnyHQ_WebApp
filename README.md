@@ -1,9 +1,12 @@
-# Advent of Code Day1: EasterBunnyHQ App
+# Advent of Code Day 1: EasterBunnyHQ Web App
 
-This EasterBunnyHQ node app computes the shortest Manhattan distance, in number of city blocks, on a [city grid](https://en.wikipedia.org/wiki/Taxicab_geometry), from a starting position [0,0] to the Easter Bunny Headquarters (EBHQ).  The city grid is represented as a fixed [Cartesian coordinate system](https://en.wikipedia.org/wiki/Coordinate_system#Cartesian_coordinate_system). 
+This EasterBunnyHQ web app computes the location of Easter Bunny Headquarters (EBHQ) on a [city grid](https://en.wikipedia.org/wiki/Taxicab_geometry) from a given sequence of (meandering) directions through the city grid.  The city grid is represented as a fixed [Cartesian coordinate system](https://en.wikipedia.org/wiki/Coordinate_system#Cartesian_coordinate_system). Using the EBHQ coordinates, the Manhattan distance--the shortest path in number of city blocks--between the starting coordinates [0,0] and EBHQ coordinates is computed.
 
 # TODO:  
-Update for web app 
+* Add animation to input route
+* Add shortest path route
+* Add styling
+* Update this README for web app 
 
 ### Development Environment
 * Mac OS X El Capitan version 10.11.6 (15G1217).
@@ -21,7 +24,7 @@ Update for web app
 Run the EBHQ App tests with the [example data](http://adventofcode.com/2016/day/1) provided by Advent of Code:  `npm test`
  
 ### Overview
-This repo contains a vanilla javascript node app that solves the [2016 Advent of Code Day 1 problem](http://adventofcode.com/2016/day/1).  In summary, one must traverse a specific path on a [city grid](https://en.wikipedia.org/wiki/Taxicab_geometry) to locate the Easter Bunny Headquarters.  A path to HQ is provided in a sequence of instructions of the form R1, L3, L2, meaning go right one block, then go left three blocks, then go left two blocks.  Given the restriction that one can only traverse along the city blocks (one cannot travel as the crow flies) the task is to find the shortest Manhattan distance in city blocks from the starting point to the EBHQ. It is assumed that the given path is a meandering path, perhaps a scenic tour of the city, and not the shortest distance. 
+This repo contains a vanilla javascript web app that solves the [2016 Advent of Code Day 1 problem](http://adventofcode.com/2016/day/1).  In summary, one must traverse a specific path on a [city grid](https://en.wikipedia.org/wiki/Taxicab_geometry) to locate the Easter Bunny Headquarters.  A path to HQ is provided in a sequence of instructions of the form R1, L3, L2, meaning go right one block, then go left three blocks, then go left two blocks.  Given the restriction that one can only traverse along the city blocks (one cannot travel as the crow flies) the task is to find the shortest Manhattan distance in city blocks from the starting point to the EBHQ. It is assumed that the given path is a meandering path, perhaps a scenic tour of the city, and not the shortest distance. 
  
 ### Discussion
 In my code Dr. Bunny is dropped into the city and finds the Easter Bunny HQ by 'theoretically' traversing the grid according to the provided input sequence.  Once the EBHQ position is located, the minimum number of blocks that Dr. Bunny could hop along to get to EBHQ is computed.
