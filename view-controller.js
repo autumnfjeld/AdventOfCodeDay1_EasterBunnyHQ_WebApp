@@ -57,8 +57,35 @@
         context.moveTo(0, minY);
         context.lineTo(0, maxY);
         context.stroke();
+
+        // Draw grid lines
+        var gridLineInterval = 20;
+        var x = minX, y = minY;
+        while (y < maxY) {
+            var	x = x + gridLineInterval;
+            var y = y + gridLineInterval;
+            console.log('1', y);
+            context.lineWidth = .5;
+            context.strokeStyle = gridLineColor;
+            context.beginPath();
+            // draw horizontal grid lines
+            context.moveTo(minX, y);
+            context.lineTo(maxX, y);
+            // draw vertical grid lines
+            context.moveTo(x, minY);
+            context.lineTo(x, maxY);
+            context.stroke();
+        }
+
     };
 
+
+
+    ViewController.prototype.drawPath = function(){
+
+
+
+    };
 
     // Export to window
     window.app = window.app || {};
