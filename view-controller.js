@@ -97,6 +97,7 @@
         this.context.strokeStyle = this.pathColor;
         this.context.beginPath();
         this.context.moveTo(0,0);  // put in variable
+        // TODO animate path drawing and coordinate display of the sequence instruction
         this.pathCoordinates.forEach(function(coord){
             this.context.lineTo(coord.x * this.scaleFactor, -coord.y * this.scaleFactor);
             this.context.stroke();
