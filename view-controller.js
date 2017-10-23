@@ -13,6 +13,10 @@
         this.sequence = sequence;
         this.minBlocks = minBlocks;
         this.pathCoordinates = position.pathCoordinates;
+        // Multiplier to make 10 pixels = 1 block
+        // TODO organize canvas settings
+        this.scaleFactor = 20;
+        this.pathColor = 'hsl(88, 48%, 41%)';
 
         this.$input = document.querySelector('.input');
         this.$solution = document.querySelector('.solution');
@@ -25,17 +29,24 @@
         this.$input.innerHTML= this.sequence;
         this.$solution.innerHTML = this.minBlocks;
         this.$canvas = document.getElementById("canvas");
+        this.context = this.$canvas.getContext("2d"),
 
         this.setUpCanvas();
+        this.drawPath();
 
     };
 
+    // TODO change canvas size depending on path boundaries
     ViewController.prototype.setUpCanvas = function(){
+
+        this.$canvas.width = 200;
+        this.$canvas.height = 200;
 
         var gridLineColor = 'hsl(0,0%,70%)',
             axisColor = 'hsl(0,0%,50%)';
 
-        var context = this.$canvas.getContext("2d"),
+        //TODO use this.context
+        var context = this.context,
             transX = this.$canvas.width * 0.5,
             transY = this.$canvas.height * 0.5;
 
@@ -64,14 +75,13 @@
         while (y < maxY) {
             var	x = x + gridLineInterval;
             var y = y + gridLineInterval;
-            console.log('1', y);
             context.lineWidth = .5;
             context.strokeStyle = gridLineColor;
             context.beginPath();
-            // draw horizontal grid lines
+            // Draw horizontal grid lines
             context.moveTo(minX, y);
             context.lineTo(maxX, y);
-            // draw vertical grid lines
+            // Draw vertical grid lines
             context.moveTo(x, minY);
             context.lineTo(x, maxY);
             context.stroke();
@@ -79,12 +89,18 @@
 
     };
 
-
-
+    /**
+     * Draw the path resulting from the input sequence instructions
+     */
     ViewController.prototype.drawPath = function(){
-
-
-
+        this.context.lineWidth = 2;
+        this.context.strokeStyle = this.pathColor;
+        this.context.beginPath();
+        this.context.moveTo(0,0);  // put in variable
+        this.pathCoordinates.forEach(function(coord){
+            this.context.lineTo(coord.x * this.scaleFactor, -coord.y * this.scaleFactor);
+            this.context.stroke();
+        }.bind(this));
     };
 
     // Export to window

@@ -14,9 +14,8 @@
         this.findEasterBunnyHQ = new app.FindEasterBunnyHQ(sequence);
         this.findEasterBunnyHQ.go();
         var minBlocks = this.findEasterBunnyHQ.minimumBlocksAway;
-        // var position = this.findEasterBunnyHQ.position;
-        // console.log('position.pathCoordinates',position.pathCoordinates);
-        this.viewController = new app.ViewController(sequence, minBlocks);
+        var position = this.findEasterBunnyHQ.position;
+        this.viewController = new app.ViewController(sequence, position, minBlocks);
     }
 
     var easterBunnyHQ = new WebApp();
