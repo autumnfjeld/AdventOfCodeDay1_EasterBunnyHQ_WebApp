@@ -1,4 +1,4 @@
-# Advent of Code Day 1: EasterBunnyHQ Web App
+# Advent of Code Day 1: Easter Bunny HQ Web App
 
 This EasterBunnyHQ web app computes the location of Easter Bunny Headquarters (EBHQ) on a [city grid](https://en.wikipedia.org/wiki/Taxicab_geometry) from a given sequence of (meandering) directions through the city grid.  The city grid is represented as a fixed [Cartesian coordinate system](https://en.wikipedia.org/wiki/Coordinate_system#Cartesian_coordinate_system). Using the EBHQ coordinates, the Manhattan distance--the shortest path in number of city blocks--between the starting coordinates [0,0] and EBHQ coordinates is computed.
 
