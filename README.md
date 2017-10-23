@@ -2,11 +2,17 @@
 
 This EasterBunnyHQ web app computes the location of Easter Bunny Headquarters (EBHQ) on a [city grid](https://en.wikipedia.org/wiki/Taxicab_geometry) from a given sequence of (meandering) directions through the city grid.  The city grid is represented as a fixed [Cartesian coordinate system](https://en.wikipedia.org/wiki/Coordinate_system#Cartesian_coordinate_system). Using the EBHQ coordinates, the Manhattan distance--the shortest path in number of city blocks--between the starting coordinates [0,0] and EBHQ coordinates is computed.
 
+The input sequence of directions and (coming) the Manhattan distance are shown on the city grid at [easterbunnyhq.autumnfjeld.com](http://easterbunnyhq.autumnfjeld.com) -- a work in progress. See todo list below.
+
+
+### Development Environment
+
 # TODO:  
 * Add animation to input route
 * Add shortest path route
-* Add styling
+* Create great visual layout and add styling
 * Update this README for web app 
+* Code cleanup/review
 
 ### Development Environment
 * Mac OS X El Capitan version 10.11.6 (15G1217).
