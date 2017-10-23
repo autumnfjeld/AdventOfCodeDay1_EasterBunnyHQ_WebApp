@@ -2,6 +2,9 @@
 
 This EasterBunnyHQ node app computes the shortest Manhattan distance, in number of city blocks, on a [city grid](https://en.wikipedia.org/wiki/Taxicab_geometry), from a starting position [0,0] to the Easter Bunny Headquarters (EBHQ).  The city grid is represented as a fixed [Cartesian coordinate system](https://en.wikipedia.org/wiki/Coordinate_system#Cartesian_coordinate_system). 
 
+# TODO:  
+Update for web app 
+
 ### Development Environment
 * Mac OS X El Capitan version 10.11.6 (15G1217).
 * Node v6.0.0
