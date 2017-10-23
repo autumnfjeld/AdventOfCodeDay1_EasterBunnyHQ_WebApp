@@ -15,18 +15,24 @@
 /**
  * Track the direction in which Dr. Bunny is facing as she 'theoretically' moves about the grid
  * Initial direction is facing north
- * Coordinates in x,y vector form:  North [0, 1], South [0, -1], East [1,0], West [-1,0]
+ * Cardinal direction vectors in a Cartesian grid:  North [0, 1], South [0, -1], East [1,0], West [-1,0]
  * @constructor
  */
 function Direction() {
-    this.vector = {
-        x: 0,
-        y: 1
-    };
+    this.cardinalDirectionVectors = [
+        [0,1],      // North
+        [1,0],      // East
+        [0,-1],     // South
+        [-1, 0]     // West
+    ];
+    // Dr. Bunny initially faces North
+    this.directionVectorIndex = 0;
 }
 
 /**
- * Compute the new direction vector that results from a R or L turn instruction
+ * Compute the new direction vector that results from a R turn (clockwise) or L turn (counterclockwise)
+ * Clockwise rotation increments the index of the cardinalDirectionVectors array, cycling through 0,1,2,3,0,1...
+ * Counterclockwise rotation decrements the index of the cardinalDirectionVectors array, cycling through 0,3,3,2,1,0...
  * @param {string} turnDirection
  */
 Direction.prototype.turn = function (turnDirection) {
@@ -34,24 +40,13 @@ Direction.prototype.turn = function (turnDirection) {
         console.error('Dr. Bunny cannot turn without a turnDirection. Check the program input.');
         return;
     }
-    if (this.vector.x === 0) {
-        // If current direction is North/South a right turn will persist the sign of new direction vector in the x,y grid
-        turnDirection === 'R' ? this.swap(1) : this.swap(-1);
+    if (turnDirection === 'R') {
+        this.directionVectorIndex = this.directionVectorIndex === 3 ? 0 : ++this.directionVectorIndex;
     } else {
-        // If current direction is East/West a right turn will negate the sign of new direction vector
-        turnDirection === 'R' ? this.swap(-1) : this.swap(1);
+        this.directionVectorIndex = this.directionVectorIndex === 0 ? this.cardinalDirectionVectors.length - 1 : --this.directionVectorIndex;
     }
 };
 
-/**
- * Swap the x, y values in the direction vector
- * @param sign
- */
-Direction.prototype.swap = function (sign) {
-    var temp = this.vector.x;
-    this.vector.x = this.vector.y * sign;
-    this.vector.y = temp * sign;
-};
 
 
 /**
@@ -65,25 +60,26 @@ function Position() {
 
 /**
  * Update Dr. Bunny's position by computing the distance moved in the specified direction
- * @param distance
- * @param directionVector
+ * @param {number} distance
+ * @param {Array} directionVector
  */
 Position.prototype.updatePosition = function (distance, directionVector) {
     if (!distance || !directionVector) {
         console.error('Cannot move Dr. Bunny without distance and direction vector. Check the program input.');
         return;
     }
-    if (directionVector.x === 0) {
-        this.y += distance * directionVector.y;
+    if (directionVector[0] === 0) {
+        this.y += distance * directionVector[1];
     } else {
-        this.x += distance * directionVector.x;
+        this.x += distance * directionVector[0];
     }
 };
 
 
+
 /**
  * Find the location of the Easter Bunny HQ from a given sequence of movements in a city grid
- * @param {Array} sequence
+ * @param {Array} sequence - array of strings
  * @constructor
  */
 function FindEasterBunnyHQ(sequence) {
@@ -100,7 +96,7 @@ function FindEasterBunnyHQ(sequence) {
 /**
  * Break the sequence strings into turn direction and travel distance
  * @param {Array} sequence
- * @returns {Array}
+ * @returns {Object}
  */
 FindEasterBunnyHQ.prototype.parseSequence = function (sequence) {
     return sequence.map(function (instruction) {
@@ -117,9 +113,9 @@ FindEasterBunnyHQ.prototype.parseSequence = function (sequence) {
 FindEasterBunnyHQ.prototype.go = function(){
     this.hopAlongTheBlocks();
     this.computeMinBunnyBlocks();
-    console.log('*********************************************************************************');
-    console.log( 'Dr. Bunny could get from her start point to Easter Bunny HQ in a mere', this.minimumBlocksAway, 'blocks.');
-    console.log('*********************************************************************************');
+    console.log('  *********************************************************************************');
+    console.log( '  Dr. Bunny could get from her start point to Easter Bunny HQ in a mere', this.minimumBlocksAway, 'blocks.');
+    console.log('  *********************************************************************************');
 };
 
 /**
@@ -128,7 +124,8 @@ FindEasterBunnyHQ.prototype.go = function(){
 FindEasterBunnyHQ.prototype.hopAlongTheBlocks = function () {
     this.parsedSequence.forEach(function (instruction) {
         this.direction.turn(instruction.turn);
-        this.position.updatePosition(instruction.distance, this.direction.vector);
+        var directionVector = this.direction.cardinalDirectionVectors[this.direction.directionVectorIndex];
+        this.position.updatePosition(instruction.distance, directionVector);
     }.bind(this));
 };
 
@@ -137,7 +134,7 @@ FindEasterBunnyHQ.prototype.hopAlongTheBlocks = function () {
  * Start position is [0,0]
  */
 FindEasterBunnyHQ.prototype.computeMinBunnyBlocks = function () {
-    this.minimumBlocksAway = Math.abs(this.position.x - 0) + Math.abs(this.position.y - 0);
+    this.minimumBlocksAway = Math.abs(this.position.x) + Math.abs(this.position.y);
 };
 
 
@@ -147,16 +144,16 @@ FindEasterBunnyHQ.prototype.computeMinBunnyBlocks = function () {
 
 /**
  * Export function to call via npm script tor run app with specified input data
- * @returns {null|*}
+ * @returns {number}
  */
 function run() {
-    // Provided input from my http://adventofcode.com/2016/day/1/input
+    // My puzzle input from my http://adventofcode.com/2016/day/1/input
     var input = {
         sequence: ['L2', 'L3', 'L3', 'L4', 'R1', 'R2', 'L3', 'R3', 'R3', 'L1', 'L3', 'R2', 'R3', 'L3', 'R4', 'R3', 'R3', 'L1', 'L4', 'R4', 'L2', 'R5', 'R1', 'L5', 'R1', 'R3', 'L5', 'R2', 'L2', 'R2', 'R1', 'L1', 'L3', 'L3', 'R4', 'R5', 'R4', 'L1', 'L189', 'L2', 'R2', 'L5', 'R5', 'R45', 'L3', 'R4', 'R77', 'L1', 'R1', 'R194', 'R2', 'L5', 'L3', 'L2', 'L1', 'R5', 'L3', 'L3', 'L5', 'L5', 'L5', 'R2', 'L1', 'L2', 'L3', 'R2', 'R5', 'R4', 'L2', 'R3', 'R5', 'L2', 'L2', 'R3', 'L3', 'L2', 'L1', 'L3', 'R5', 'R4', 'R3', 'R2', 'L1', 'R2', 'L5', 'R4', 'L5', 'L4', 'R4', 'L2', 'R5', 'L3', 'L2', 'R4', 'L1', 'L2', 'R2', 'R3', 'L2', 'L5', 'R1', 'R1', 'R3', 'R4', 'R1', 'R2', 'R4', 'R5', 'L3', 'L5', 'L3', 'L3', 'R5', 'R4', 'R1', 'L3', 'R1', 'L3', 'R3', 'R3', 'R3', 'L1', 'R3', 'R4', 'L5', 'L3', 'L1', 'L5', 'L4', 'R4', 'R1', 'L4', 'R3', 'R3', 'R5', 'R4', 'R3', 'R3', 'L1', 'L2', 'R1', 'L4', 'L4', 'L3', 'L4', 'L3', 'L5', 'R2', 'R4', 'L2']
     };
 
     var bunnyTrip = new FindEasterBunnyHQ(input.sequence);
-    bunnyTrip.go()
+    bunnyTrip.go();
     return bunnyTrip.minimumBlocksAway;
 }
 
