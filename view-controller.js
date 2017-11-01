@@ -14,12 +14,23 @@
         this.minBlocks = minBlocks;
         this.pathBoundaries = position.pathBoundaries;
         this.pathCoordinates = position.pathCoordinates;
-        // Multiplier to make 10 pixels = 1 block
-        // TODO organize canvas settings
-        // Set the # of pixels in a city grid (TODO: will need to be computed for variable pathBoundaries)
-        this.scaleFactor = 5;
-        this.pathColor = 'hsl(88, 48%, 41%)';
 
+        // Set the # of pixels in a city grid (TODO: will need to be computed for variable pathBoundaries)
+        // Properties for the html canvas grid
+        this.canvasProps = {
+            // TODO for variable input, compute scaleFactor according to pathBoundaries
+            scaleFactor: 5,
+            gridBoundaries: {
+                minX: null,
+                maxX: null,
+                minY: null,
+                maxY: null,
+            },
+            axisColor: 'hsl(0,100%,100%)',
+            gridLineColor: 'hsl(0,0%,70%)',
+            pathColor: 'hsl(88, 48%, 41%)',
+        };
+        // DOM selectors
         this.$input = document.querySelector('.input');
         this.$solution = document.querySelector('.solution');
     }
@@ -47,16 +58,15 @@
      */
     ViewController.prototype._setUpCanvas = function(){
 
-        var minX = this.pathBoundaries.minX * this.scaleFactor - 2 * this.scaleFactor,
-            maxX = this.pathBoundaries.maxX * this.scaleFactor + 2 * this.scaleFactor,
-            minY = this.pathBoundaries.minY * this.scaleFactor - 2 * this.scaleFactor,
-            maxY = this.pathBoundaries.maxY * this.scaleFactor + 2 * this.scaleFactor;
+        var minX = this.pathBoundaries.minX * this.canvasProps.scaleFactor - 2 * this.canvasProps.scaleFactor,
+            maxX = this.pathBoundaries.maxX * this.canvasProps.scaleFactor + 2 * this.canvasProps.scaleFactor,
+            minY = this.pathBoundaries.minY * this.canvasProps.scaleFactor - 2 * this.canvasProps.scaleFactor,
+            maxY = this.pathBoundaries.maxY * this.canvasProps.scaleFactor + 2 * this.canvasProps.scaleFactor;
             console.log('Grid boundaries', minX, maxX, minY, maxY);
 
         this.$canvas.width =  (Math.abs(minX) + maxX);
         this.$canvas.height = (Math.abs(minY) + maxY);
-        var gridLineColor = 'hsl(0,0%,70%)',
-            axisColor = 'hsl(0,100%,100%)';
+      
 
         //TODO use this.context
         // Canvas puts [0,0] point at top left, with x+ going right and y positive
@@ -72,14 +82,10 @@
         // Mirror y axis to create Cartesian coordinate system
         context.scale(1,-1);
         context.lineWidth = 1;
-        context.strokeStyle = axisColor;
+        context.strokeStyle = this.canvasProps.axisColor;
 
         // tell canvas you to begin a new path
         context.beginPath();
-        // var minX = -this.$canvas.width/2, maxX = this.$canvas.width/2;
-        // var minY = -this.$canvas.height/2, maxY = this.$canvas.height/2;
-
-
         // Draw x coordinate axis
         context.moveTo(minX, 0);
         context.lineTo(maxX, 0);
@@ -89,16 +95,15 @@
         context.stroke();
 
         // Draw grid lines
-        var gridLineInterval = this.scaleFactor;
         var x = minX, y = minY;
         // TODO account for non-equal x,y iterations 
         while (y < maxY || x < maxX) {
             // console.log('before x', x, ' y', y);
-            var x = x + gridLineInterval;
-            var y = y + gridLineInterval;
             // console.log('after', x, ' y', y);
+            var x = x + this.canvasProps.scaleFactor;
+            var y = y + this.canvasProps.scaleFactor;
             context.lineWidth = .5;
-            context.strokeStyle = gridLineColor;
+            context.strokeStyle = this.canvasProps.gridLineColor;
             context.beginPath();
             // Draw horizontal grid lines
             context.moveTo(minX, y);
@@ -116,14 +121,13 @@
      */
     ViewController.prototype._drawPath = function(){
         this.context.lineWidth = 2;
-        this.context.strokeStyle = this.pathColor;
+        this.context.strokeStyle = this.canvasProps.pathColor;
         this.context.beginPath();
         this.context.moveTo(0,0);  // put in variable
         // TODO animate path drawing and coordinate display of the sequence instruction
         this.pathCoordinates.forEach(function(coord){
-            var x = coord.x * this.scaleFactor,
-                y = coord.y * this.scaleFactor;
-            console.log(' x', x, ' y', y);
+            var x = coord.x * this.canvasProps.scaleFactor,
+                y = coord.y * this.canvasProps.scaleFactor;
 
             this.context.lineTo(x, y);
             this.context.stroke();
