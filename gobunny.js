@@ -91,11 +91,11 @@ Position.prototype.trackBoundary = function (){
     if (this.x > this.pathBoundaries.maxX) {
         this.pathBoundaries.maxX = this.x;
     }
-    if (this.x < this.pathBoundaries.minY) {
-        this.pathBoundaries.minY = this.x;
+    if (this.y < this.pathBoundaries.minY) {
+        this.pathBoundaries.minY = this.y;
     }
-    if (this.x > this.pathBoundaries.maxY) {
-        this.pathBoundaries.maxY= this.x;
+    if (this.y > this.pathBoundaries.maxY) {
+        this.pathBoundaries.maxY= this.y;
     }
 };
 
