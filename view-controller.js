@@ -16,7 +16,7 @@
         this.pathCoordinates = position.pathCoordinates;
 
         // Set the # of pixels in a city grid (TODO: will need to be computed for variable pathBoundaries)
-        // Properties for the html canvas grid
+        // Properties for the html canvas grid (Consider making canvas it's own class or adding on to native object)
         this.canvasProps = {
             // TODO for variable input, compute scaleFactor according to pathBoundaries
             scaleFactor: 5,
@@ -58,14 +58,11 @@
      */
     ViewController.prototype._setUpCanvas = function(){
 
-        var minX = this.pathBoundaries.minX * this.canvasProps.scaleFactor - 2 * this.canvasProps.scaleFactor,
-            maxX = this.pathBoundaries.maxX * this.canvasProps.scaleFactor + 2 * this.canvasProps.scaleFactor,
-            minY = this.pathBoundaries.minY * this.canvasProps.scaleFactor - 2 * this.canvasProps.scaleFactor,
-            maxY = this.pathBoundaries.maxY * this.canvasProps.scaleFactor + 2 * this.canvasProps.scaleFactor;
-            console.log('Grid boundaries', minX, maxX, minY, maxY);
+        this._computeCanvasBoundaries();
+        var cb = this.canvasProps.gridBoundaries;
 
-        this.$canvas.width =  (Math.abs(minX) + maxX);
-        this.$canvas.height = (Math.abs(minY) + maxY);
+        this.$canvas.width =  (Math.abs(cb.minX) + cb.maxX);
+        this.$canvas.height = (Math.abs(cb.minY) + cb.maxY);
       
 
         //TODO use this.context
@@ -73,8 +70,8 @@
         // going down.  Use canvas translate and scale methods to convert the x, y axis
         // into the familiar cartision grid coordinate directions
         var context = this.context,
-            translateXAxix = Math.abs(minX),
-            translateYAxis = maxY;
+            translateXAxix = Math.abs(cb.minX),
+            translateYAxis = cb.maxY;
 
         // Move x and y axis to center of canvas
         context.translate(translateXAxix, translateYAxis);
@@ -84,36 +81,47 @@
         context.lineWidth = 1;
         context.strokeStyle = this.canvasProps.axisColor;
 
-        // tell canvas you to begin a new path
+        // Draw coordinate axes: tell canvas context to begin a new path 
         context.beginPath();
         // Draw x coordinate axis
-        context.moveTo(minX, 0);
-        context.lineTo(maxX, 0);
+        context.moveTo(cb.minX, 0);
+        context.lineTo(cb.maxX, 0);
         // Draw y axis
-        context.moveTo(0, minY);
-        context.lineTo(0, maxY);
+        context.moveTo(0, cb.minY);
+        context.lineTo(0, cb.maxY);
         context.stroke();
 
         // Draw grid lines
-        var x = minX, y = minY;
+        var x = cb.minX, y = cb.minY;
         // TODO account for non-equal x,y iterations 
-        while (y < maxY || x < maxX) {
-            // console.log('before x', x, ' y', y);
-            // console.log('after', x, ' y', y);
+        while (y < cb.maxY || x < cb.maxX) {
             var x = x + this.canvasProps.scaleFactor;
             var y = y + this.canvasProps.scaleFactor;
             context.lineWidth = .5;
             context.strokeStyle = this.canvasProps.gridLineColor;
             context.beginPath();
             // Draw horizontal grid lines
-            context.moveTo(minX, y);
-            context.lineTo(maxX, y);
+            context.moveTo(cb.minX, y);
+            context.lineTo(cb.maxX, y);
             // Draw vertical grid lines
-            context.moveTo(x, minY);
-            context.lineTo(x, maxY);
+            context.moveTo(x, cb.minY);
+            context.lineTo(x, cb.maxY);
             context.stroke();
         }
 
+    };
+
+    /**
+     * Computes the boundaries of the html canvas as a function of the input path boundaries
+     * and the scaleFactor
+     */
+    ViewController.prototype._computeCanvasBoundaries = function() {
+        var boundaryExtension = null;
+        // Entry contains the [key, value] pair for each item in this.pathBoundaries
+        Object.entries(this.pathBoundaries).forEach(function(entry) {
+            boundaryExtension = entry[0].includes('max') ? 2 * this.canvasProps.scaleFactor : -2 * this.canvasProps.scaleFactor;
+            this.canvasProps.gridBoundaries[entry[0]] = entry[1] * this.canvasProps.scaleFactor + boundaryExtension;
+        }.bind(this));
     };
 
     /**
