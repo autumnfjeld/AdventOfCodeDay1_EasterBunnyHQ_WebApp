@@ -13,12 +13,14 @@
         this.sequence = sequence;
         this.minBlocks = minBlocks;
         this.pathBoundaries = position.pathBoundaries;
+        //TODO eliminate pathCoordinates
         this.pathCoordinates = position.pathCoordinates;
+        this.setIntervalId = null;
 
-        // Set the # of pixels in a city grid (TODO: will need to be computed for variable pathBoundaries)
         // Properties for the html canvas grid (Consider making canvas it's own class or adding on to native object)
+        // TODO for variable input, compute scaleFactor according to pathBoundaries
         this.canvasProps = {
-            // TODO for variable input, compute scaleFactor according to pathBoundaries
+            // scaleFactor represents #of pixels per city block
             scaleFactor: 5,
             gridBoundaries: {
                 minX: null,
@@ -30,6 +32,12 @@
             gridLineColor: 'hsl(0,0%,70%)',
             pathColor: 'hsl(88, 48%, 41%)',
         };
+        this.scaledPathCoords = this.pathCoordinates.map(function(coord) {
+            return {
+                x: coord.x * this.canvasProps.scaleFactor,
+                y: coord.y * this.canvasProps.scaleFactor,
+            }
+        }.bind(this));
 
         // DOM selectors
         this.$input = document.querySelector('.input');
@@ -42,11 +50,11 @@
     ViewController.prototype.render = function() {
         this.$input.innerHTML = this.sequence;
         this.$solution.innerHTML = this.minBlocks;
-        this.$canvas = document.getElementById("canvas");
+        this.$canvas = document.getElementById("city-grid");
         this.context = this.$canvas.getContext("2d");
 
         this._setUpCanvas();
-        this._drawPath();
+        this._animatePath(this.pathCoordinates);
     };
 
     /**
@@ -115,20 +123,45 @@
     };
 
     /**
-     * Draw the path resulting from the input sequence instructions
+     * Draw a single segment of the path for the given destination coordinates
+     * @param  {Object} coordinate - {x: , y: } coordiante position
      */
-    ViewController.prototype._drawPath = function() {
+    ViewController.prototype._drawLine = function(coordinate) {
+        this.context.lineTo(coordinate.x, coordinate.y);
+        this.context.stroke();
+    };
+
+    /**
+     * Animate the path using setInterval and _drawLine function
+     * TODO: make general to handle the Manhattan Distance path
+     */
+    ViewController.prototype._animatePath = function() {
+        // Set line properties and starting position
         this.context.lineWidth = 2;
         this.context.strokeStyle = this.canvasProps.pathColor;
         this.context.beginPath();
-        this.context.moveTo(0, 0); // put in variable
-        // TODO animate path drawing and coordinate display of the sequence instruction
-        this.pathCoordinates.forEach(function(coord) {
-            var x = coord.x * this.canvasProps.scaleFactor,
-                y = coord.y * this.canvasProps.scaleFactor;
-            this.context.lineTo(x, y);
-            this.context.stroke();
-        }.bind(this));
+        this.context.moveTo(0, 0);
+        var i = 0;
+
+        this.setIntervalId = window.setInterval(function() {
+            this._drawLine(this.scaledPathCoords[i++])
+            if (this.scaledPathCoords.length === i) {
+                this._stopAnimation(this.setIntervalId);
+            }
+        }.bind(this), 50);
+
+        function stop() {
+            window.clearInterval(this.setIntervalId)
+        }
+
+    };
+
+    /**
+     * Stop the setInterval execution
+     * @param  {number} intervalId - the setInterval id
+     */
+    ViewController.prototype._stopAnimation = function(intervalId) {
+        window.clearInterval(intervalId);
     };
 
     // Export to window
