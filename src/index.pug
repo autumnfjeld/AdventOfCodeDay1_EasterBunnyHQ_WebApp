@@ -7,20 +7,22 @@ html
 
     body
         .container
-            h1  A trip to Easter Bunny HQ
             .flex-row
+                .title-box
+                    h1.page-title  A trip to Easter Bunny HQ
                 .input-box
                     h2 Directions
                     .instruction-sequence
                         p.instruction-0
                 div
-                    p Dr. Bunny could get to Easter Bunny HQ in
+                    h2.shortest-path-text The shortest route that Dr. Bunny could take to get to Easter Bunny HQ is
                         span.solution
                         span blocks.
                     .canvas-box
                         canvas#city-grid(width="600" height="600")
                             p This text is displayed if your browser does not support HTML5 Canvas.
 
+    script(src="helpers.js")
     script(src="gobunny.js")
     script(src="view-controller.js")
     script(src="web-app.js")

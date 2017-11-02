@@ -1,10 +1,55 @@
-//TODO  Fun Styling!!!
+//TODO improve text display, alignment maybe cleverer way to deal with large grid
 
-//TODO add npm build css command
+$colorHighlight: hsl(0,0%,85%);
+$white: hsl(0,0%,100%);
+$dustyPurple: hsl(271, 27%, 29%);
+$brightGreen: hsl(88, 48%, 41%);
+
+body 
+ 	background-color: $dustyPurple
+ 	color: $white
+ 	font-size: .9rem
+ 	font-family: sans-serif
+
+h1, h2, h3
+ 	font-weight: 100
+
 
 .flex-row 
 	display: flex
+	flex-direction: row
+	justify-content: space-evenly
 
 .flex-col 
 	display: flex
-	flex-dir
+	flex-direction: column
+
+// Find a better way to position the transformed title
+.page-title
+	position: fixed
+	top: 174px		// Natural height of unrotated element is 33px
+	left: -214px				// natural width of unrotated element is 331px
+	letter-spacing: 2px
+	transform: rotate(270deg)	
+	width: 400px
+
+.input-box
+	max-width: 200px
+	overflow-wrap: break-word
+
+// TODO seperate text parts to create better visual alignment
+.instruction-sequence
+	min-width: 100px;
+	[class^="instruction-"]
+		margin: .4rem 0
+		color: lighten($brightGreen, 20%)
+
+.solution
+	padding: 0 4px;
+
+.canvas-box 
+	border: 1px solid $colorHighlight
+
+#city-grid
+	display: block			// To eliminate 4px space under inline element
+
