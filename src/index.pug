@@ -3,24 +3,23 @@ html
     head
         meta(charset="utf-8")
         title Easter Bunny HQ
-        //TODO link(rel='stylesheet', href='style.css')
+        link(rel='stylesheet', href='style.css')
 
-    body(style="background-color: hsl(271, 27%, 29%); color: hsl(0,0%,70%);")
+    body
         .container
             h1  A trip to Easter Bunny HQ
-            div
+            .flex-row
+                .input-box
+                    h2 Directions
+                    .instruction-sequence
+                        p.instruction-0
                 div
-                    h2 Input
-                    p.input
-                div
-                    h2 Path coordinates
-                    p.path
-                    h2 Solution
                     p Dr. Bunny could get to Easter Bunny HQ in
                         span.solution
                         span blocks.
-                    canvas#canvas(width="600" height="600")
-                        p This text is displayed if your browser does not support HTML5 Canvas.
+                    .canvas-box
+                        canvas#city-grid(width="600" height="600")
+                            p This text is displayed if your browser does not support HTML5 Canvas.
 
     script(src="gobunny.js")
     script(src="view-controller.js")

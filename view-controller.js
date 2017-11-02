@@ -38,23 +38,25 @@
                 y: coord.y * this.canvasProps.scaleFactor,
             }
         }.bind(this));
+    
 
-        // DOM selectors
-        this.$input = document.querySelector('.input');
+        // Define DOM selectors
+        this.$instructionSequence = document.querySelector('.instruction-sequence');
         this.$solution = document.querySelector('.solution');
+        this.$path = document.querySelector('.path');
     }
 
     /**
      * Initiate render of DOM
      */
     ViewController.prototype.render = function() {
-        this.$input.innerHTML = this.sequence;
         this.$solution.innerHTML = this.minBlocks;
         this.$canvas = document.getElementById("city-grid");
         this.context = this.$canvas.getContext("2d");
 
         this._setUpCanvas();
-        this._animatePath(this.pathCoordinates);
+        this._animate();
+        //TODO Draw shortest path
     };
 
     /**
@@ -135,7 +137,7 @@
      * Animate the path using setInterval and _drawLine function
      * TODO: make general to handle the Manhattan Distance path
      */
-    ViewController.prototype._animatePath = function() {
+    ViewController.prototype._animate = function() {
         // Set line properties and starting position
         this.context.lineWidth = 2;
         this.context.strokeStyle = this.canvasProps.pathColor;
@@ -144,16 +146,16 @@
         var i = 0;
 
         this.setIntervalId = window.setInterval(function() {
-            this._drawLine(this.scaledPathCoords[i++])
+            this._renderCurrentPathInstruction(i);
+            this._drawLine(this.scaledPathCoords[i++]);
             if (this.scaledPathCoords.length === i) {
                 this._stopAnimation(this.setIntervalId);
             }
-        }.bind(this), 50);
+        }.bind(this), 200);
 
         function stop() {
             window.clearInterval(this.setIntervalId)
         }
-
     };
 
     /**
@@ -162,6 +164,29 @@
      */
     ViewController.prototype._stopAnimation = function(intervalId) {
         window.clearInterval(intervalId);
+    };
+
+    /**
+     * Append the sequence instruction to the DOM
+     * @param  {[type]} i [description]
+     * @return {[type]}   [description]
+     */
+    ViewController.prototype._renderCurrentPathInstruction = function(i) {
+        var text,
+            $newInstruction = document.createElement('p'),
+            $previousInstruction = document.querySelector('.instruction-' + i),
+            displayIndex = i + 1;
+
+        if (this.sequence[i].startsWith('R')) {
+            text = 'Right ';
+        } else {
+            text = 'Left   ';
+        }
+        text = displayIndex + ')  ' + text + this.sequence[i].substring(1) + ' blocks';
+      
+        $newInstruction.className = 'instruction-' + displayIndex;
+        $newInstruction.innerHTML = text;
+        this.$instructionSequence.insertBefore($newInstruction, $previousInstruction)
     };
 
     // Export to window
