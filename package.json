@@ -6,7 +6,10 @@
     "scripts": {
         "test": "node test.js run",
         "goBunny": "node gobunny.js run",
-        "watch:pug": "pug src/index.pug --out . --watch --pretty"
+        "watch:pug": "pug src/index.pug --out . --watch --pretty",
+        "sass": "node-sass --output-style compact -o . src/style.sass",
+        "watch:sass": "onchange 'src/*.sass' -i -v -- npm run sass",
+        "watch:all": "npm run watch:pug & npm run watch:sass"
     },
     "repository": {
         "type": "git",
