@@ -1,6 +1,6 @@
 'use strict';
 
-(function (window) {
+(function(window) {
 
     /**
      *
@@ -30,6 +30,7 @@
             gridLineColor: 'hsl(0,0%,70%)',
             pathColor: 'hsl(88, 48%, 41%)',
         };
+
         // DOM selectors
         this.$input = document.querySelector('.input');
         this.$solution = document.querySelector('.solution');
@@ -38,15 +39,14 @@
     /**
      * Initiate render of DOM
      */
-    ViewController.prototype.render = function(){
-        this.$input.innerHTML= this.sequence;
+    ViewController.prototype.render = function() {
+        this.$input.innerHTML = this.sequence;
         this.$solution.innerHTML = this.minBlocks;
         this.$canvas = document.getElementById("canvas");
-        this.context = this.$canvas.getContext("2d"),
+        this.context = this.$canvas.getContext("2d");
 
         this._setUpCanvas();
         this._drawPath();
-
     };
 
     /**
@@ -54,24 +54,20 @@
      *   - canvas size based on pathBoundaries computed in FindEasterBunnyHQ
      *   - x, y coordinates axes 
      *   - grid lines that represent the city grid
-     * 
      */
-    ViewController.prototype._setUpCanvas = function(){
-
+    ViewController.prototype._setUpCanvas = function() {
         this._computeCanvasBoundaries();
         var cb = this.canvasProps.gridBoundaries;
 
-        this.$canvas.width =  (Math.abs(cb.minX) + cb.maxX);
+        this.$canvas.width = (Math.abs(cb.minX) + cb.maxX);
         this.$canvas.height = (Math.abs(cb.minY) + cb.maxY);
-      
 
         // Canvas puts [0,0] point at top left, with x+ going right and y+ going down.  Use canvas translate and 
         // scale methods to convert the x, y axis into the familiar cartision grid coordinate directions
         var translateXAxix = Math.abs(cb.minX),
             translateYAxis = cb.maxY;
-
         this.context.translate(translateXAxix, translateYAxis);
-        this.context.scale(1,-1);
+        this.context.scale(1, -1);
         this.context.lineWidth = 1;
         this.context.strokeStyle = this.canvasProps.axisColor;
 
@@ -86,7 +82,8 @@
         this.context.stroke();
 
         // Draw grid lines
-        var x = cb.minX, y = cb.minY;
+        var x = cb.minX,
+            y = cb.minY;
         while (y <= cb.maxY || x <= cb.maxX) {
             this.context.lineWidth = .5;
             this.context.strokeStyle = this.canvasProps.gridLineColor;
@@ -102,7 +99,6 @@
             x = x > cb.maxX ? x : x + this.canvasProps.scaleFactor;
             y = y > cb.maxY ? y : y + this.canvasProps.scaleFactor;
         }
-
     };
 
     /**
@@ -121,16 +117,15 @@
     /**
      * Draw the path resulting from the input sequence instructions
      */
-    ViewController.prototype._drawPath = function(){
+    ViewController.prototype._drawPath = function() {
         this.context.lineWidth = 2;
         this.context.strokeStyle = this.canvasProps.pathColor;
         this.context.beginPath();
-        this.context.moveTo(0,0);  // put in variable
+        this.context.moveTo(0, 0); // put in variable
         // TODO animate path drawing and coordinate display of the sequence instruction
-        this.pathCoordinates.forEach(function(coord){
+        this.pathCoordinates.forEach(function(coord) {
             var x = coord.x * this.canvasProps.scaleFactor,
                 y = coord.y * this.canvasProps.scaleFactor;
-
             this.context.lineTo(x, y);
             this.context.stroke();
         }.bind(this));
