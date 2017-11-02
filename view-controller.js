@@ -65,46 +65,39 @@
         this.$canvas.height = (Math.abs(cb.minY) + cb.maxY);
       
 
-        //TODO use this.context
-        // Canvas puts [0,0] point at top left, with x+ going right and y positive
-        // going down.  Use canvas translate and scale methods to convert the x, y axis
-        // into the familiar cartision grid coordinate directions
-        var context = this.context,
-            translateXAxix = Math.abs(cb.minX),
+        // Canvas puts [0,0] point at top left, with x+ going right and y+ going down.  Use canvas translate and 
+        // scale methods to convert the x, y axis into the familiar cartision grid coordinate directions
+        var translateXAxix = Math.abs(cb.minX),
             translateYAxis = cb.maxY;
 
-        // Move x and y axis to center of canvas
-        context.translate(translateXAxix, translateYAxis);
-
-        // Mirror y axis to create Cartesian coordinate system
-        context.scale(1,-1);
-        context.lineWidth = 1;
-        context.strokeStyle = this.canvasProps.axisColor;
+        this.context.translate(translateXAxix, translateYAxis);
+        this.context.scale(1,-1);
+        this.context.lineWidth = 1;
+        this.context.strokeStyle = this.canvasProps.axisColor;
 
         // Draw coordinate axes: tell canvas context to begin a new path 
-        context.beginPath();
+        this.context.beginPath();
         // Draw x coordinate axis
-        context.moveTo(cb.minX, 0);
-        context.lineTo(cb.maxX, 0);
+        this.context.moveTo(cb.minX, 0);
+        this.context.lineTo(cb.maxX, 0);
         // Draw y axis
-        context.moveTo(0, cb.minY);
-        context.lineTo(0, cb.maxY);
-        context.stroke();
+        this.context.moveTo(0, cb.minY);
+        this.context.lineTo(0, cb.maxY);
+        this.context.stroke();
 
         // Draw grid lines
         var x = cb.minX, y = cb.minY;
-        // TODO account for non-equal x,y iterations 
         while (y <= cb.maxY || x <= cb.maxX) {
-            context.lineWidth = .5;
-            context.strokeStyle = this.canvasProps.gridLineColor;
-            context.beginPath();
+            this.context.lineWidth = .5;
+            this.context.strokeStyle = this.canvasProps.gridLineColor;
+            this.context.beginPath();
             // Draw horizontal grid lines
-            context.moveTo(cb.minX, y);
-            context.lineTo(cb.maxX, y);
+            this.context.moveTo(cb.minX, y);
+            this.context.lineTo(cb.maxX, y);
             // Draw vertical grid lines
-            context.moveTo(x, cb.minY);
-            context.lineTo(x, cb.maxY);
-            context.stroke();
+            this.context.moveTo(x, cb.minY);
+            this.context.lineTo(x, cb.maxY);
+            this.context.stroke();
             // For very large grids, more efficient to break up x & y iterations
             x = x > cb.maxX ? x : x + this.canvasProps.scaleFactor;
             y = y > cb.maxY ? y : y + this.canvasProps.scaleFactor;
