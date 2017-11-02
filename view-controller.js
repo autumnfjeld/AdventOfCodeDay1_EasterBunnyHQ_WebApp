@@ -94,9 +94,7 @@
         // Draw grid lines
         var x = cb.minX, y = cb.minY;
         // TODO account for non-equal x,y iterations 
-        while (y < cb.maxY || x < cb.maxX) {
-            var x = x + this.canvasProps.scaleFactor;
-            var y = y + this.canvasProps.scaleFactor;
+        while (y <= cb.maxY || x <= cb.maxX) {
             context.lineWidth = .5;
             context.strokeStyle = this.canvasProps.gridLineColor;
             context.beginPath();
@@ -107,6 +105,9 @@
             context.moveTo(x, cb.minY);
             context.lineTo(x, cb.maxY);
             context.stroke();
+            // For very large grids, more efficient to break up x & y iterations
+            x = x > cb.maxX ? x : x + this.canvasProps.scaleFactor;
+            y = y > cb.maxY ? y : y + this.canvasProps.scaleFactor;
         }
 
     };
